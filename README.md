@@ -32,6 +32,20 @@ O site também pode ser testado abrindo `index.html` diretamente em um navegador
 - Edição de perfil demonstrativo, salva somente no navegador.
 - Visão de gestão com fluxo fictício de moderação.
 
+## Princípios da experiência no celular
+
+O protótipo foi adaptado para cooperados com pouca familiaridade com tecnologia:
+
+- Página inicial em linguagem direta: **Encontrar um serviço**, **Preciso contratar alguém**, **Divulgar meu trabalho**.
+- Barra fixa com quatro destinos: **Início**, **Buscar**, **Pedidos** e **Meu perfil**.
+- Busca sempre visível na parte superior; filtros avançados recolhidos até o usuário precisar deles.
+- Botões e campos maiores, com textos visíveis em vez de depender somente de ícones.
+- Funciona sem aplicativo instalado; basta abrir pelo navegador.
+
+### Teste de usabilidade sugerido
+
+Mostre a versão mobile a três ou mais pessoas que não conhecem o protótipo, sem dar instruções. Peça que tentem: (1) achar alguém que instala câmeras, (2) publicar uma necessidade fictícia e (3) montar um cartão de apresentação. Observe onde hesitam, quanto tempo levam e se pedem ajuda. Ajuste a interface com base nas dificuldades reais.
+
 ## Limitações deliberadas
 
 Nenhum fluxo representa uma contratação real. Não há contas, dados pessoais reais, chat, pagamentos, validação de cooperados, envio de solicitações ou comunicação com a cooperativa. Todos os dados locais podem ser apagados nas configurações do navegador.
