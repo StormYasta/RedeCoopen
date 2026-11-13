@@ -112,8 +112,8 @@
   function sidebar() {
     var links = [
       ["inicio", "home", "Início"],
-      ["rede", "users", "Explorar rede"],
-      ["oportunidades", "briefcase", "Oportunidades"],
+      ["rede", "users", "Encontrar serviços"],
+      ["oportunidades", "briefcase", "Pedidos e oportunidades"],
       ["ofertas", "gift", "Benefícios e ofertas"],
       ["favoritos", "heart", "Meus favoritos"]
     ];
@@ -132,9 +132,10 @@
   }
   function topbar() {
     return '<header class="topbar"><div class="topbar-left">' +
-      button(icon("menu", 22), "menu", "icon-button mobile-menu", ' aria-label="Abrir menu"') +
+      button(icon("menu", 22), "menu", "icon-button mobile-menu", ' aria-label="Abrir mais opções"') +
+      '<span class="mobile-header-brand">rede <strong>coopen</strong></span>' +
       '<div class="topbar-search">' + icon("search", 20) +
-      '<input id="global-search" data-search type="search" placeholder="Busque por serviços, pessoas ou empresas..." value="' + safe(state.query) + '" aria-label="Pesquisar na rede">' +
+      '<input id="global-search" data-search type="search" placeholder="Buscar serviço ou profissional" value="' + safe(state.query) + '" aria-label="Pesquisar na rede">' +
       (state.query ? button(icon("x", 15), "clear-search", "search-clear", ' aria-label="Limpar pesquisa"') : '<span class="search-shortcut">Buscar</span>') +
       '</div></div><div class="topbar-right"><span class="prototype-pill"><span></span> Protótipo interativo</span>' +
       button('<span class="top-avatar">C</span><span class="top-person">Cooperado demo</span>' + icon("down", 15), "my-profile", "account-button", ' aria-label="Abrir meu perfil"') +
@@ -217,9 +218,23 @@
         matchesQuery([o.title, o.description, o.benefit, categoryName(o.category), p && p.company]);
     });
   }
+
+  function mobileWelcome() {
+    return '<section class="mobile-welcome" aria-label="Escolha o que deseja fazer">' +
+      '<span class="welcome-kicker">BEM-VINDO À REDE</span>' +
+      '<h1>O que você precisa hoje?</h1><p>Escolha uma opção para começar.</p>' +
+      '<div class="mobile-quick-actions">' +
+      '<button type="button" class="quick-action quick-action-primary" data-action="nav" data-page="rede">' +
+      '<span class="quick-icon">' + icon("search", 24) + '</span><span class="quick-text"><strong>Encontrar um serviço</strong><small>Veja quem pode ajudar você</small></span>' + icon("chevron", 23) + '</button>' +
+      '<button type="button" class="quick-action" data-action="new-demand">' +
+      '<span class="quick-icon">' + icon("plus", 24) + '</span><span class="quick-text"><strong>Preciso contratar alguém</strong><small>Conte o que está procurando</small></span>' + icon("chevron", 23) + '</button>' +
+      '<button type="button" class="quick-action" data-action="nav" data-page="meu-perfil">' +
+      '<span class="quick-icon">' + icon("user", 24) + '</span><span class="quick-text"><strong>Divulgar meu trabalho</strong><small>Crie seu cartão profissional</small></span>' + icon("chevron", 23) + '</button>' +
+      '</div></section>';
+  }
   function renderHome() {
     var picks = DATA.profiles.filter(function (p) { return p.featured; });
-    return '<section class="hero"><div class="hero-copy"><span class="hero-kicker">' + icon("sparkles", 16) + ' Uma comunidade, muitas possibilidades</span>' +
+    return mobileWelcome() + '<section class="hero"><div class="hero-copy"><span class="hero-kicker">' + icon("sparkles", 16) + ' Uma comunidade, muitas possibilidades</span>' +
       '<h1>Boas conexões.<br><em>Grandes oportunidades.</em></h1><p>Descubra os talentos e negócios da nossa comunidade. Encontre quem oferece o que você precisa — e faça parte dessa rede.</p>' +
       '<div class="hero-actions">' + button("Explorar cooperados " + icon("arrow", 18), "nav", "button button-light", ' data-page="rede"') +
       button(icon("plus", 17) + " Publicar necessidade", "new-demand", "button button-outline-light") + '</div></div>' +
@@ -243,19 +258,26 @@
   }
   function renderDirectory() {
     var profiles = filteredProfiles();
-    return titleBlock("NOSSA COMUNIDADE", "Encontre quem faz acontecer.", "Explore profissionais, serviços e empresas que poderiam fazer parte da Rede Coopen.") +
+    return titleBlock("ENCONTRE UM SERVIÇO", "Quem pode ajudar você?", "Busque pelo serviço que precisa ou escolha uma área.") +
       '<div class="filter-panel"><div class="filter-head"><strong>' + icon("filter", 18) + ' Filtrar por área</strong><span>Selecione uma categoria</span></div>' + categoryButtons(true) +
       '<div class="filter-bottom"><span>Tipo de perfil</span><div class="segmented">' +
       [["todos", "Todos"], ["empresa", "Empresas"], ["profissional", "Profissionais"]].map(function (item) {
         return button(item[1], "profile-type", "segment" + (state.profileType === item[0] ? " active" : ""), ' data-id="' + item[0] + '"');
       }).join("") + '</div></div></div>' +
+
+      '<details class="mobile-filter-panel"><summary>' + icon("filter", 20) + ' Filtrar resultados ' + icon("down", 19) + '</summary><div class="mobile-filter-content"><p>Área do serviço</p>' + categoryButtons(true) +
+      '<p>Tipo de cadastro</p><div class="segmented">' +
+      [["todos", "Todos"], ["empresa", "Empresas"], ["profissional", "Profissionais"]].map(function (item) {
+        return button(item[1], "profile-type", "segment" + (state.profileType === item[0] ? " active" : ""), ' data-id="' + item[0] + '"');
+      }).join("") + '</div>' +
+      button("Limpar filtros", "reset-to", "button button-secondary mobile-reset", ' data-page="rede"') + '</div></details>' +
       '<div class="results-header"><div><strong>' + profiles.length + '</strong> ' + (profiles.length === 1 ? "perfil encontrado" : "perfis encontrados") + '</div><span>Resultados de demonstração</span></div>' +
       profileCards(profiles);
   }
   function renderOpportunities() {
     var demands = filteredDemands();
-    return titleBlock("MURAL DE OPORTUNIDADES", "Necessidades viram conexões.", "Publique o que você procura e descubra demandas que podem combinar com sua atividade.",
-      button(icon("plus", 18) + " Nova necessidade", "new-demand", "button button-primary")) +
+    return titleBlock("PEDIDOS DA COMUNIDADE", "Pedidos e oportunidades.", "Encontre pedidos de serviços ou publique o que precisa.",
+      button(icon("plus", 18) + " Publicar meu pedido", "new-demand", "button button-primary")) +
       '<div class="info-banner">' + icon("info", 19) + '<p><strong>Como funciona?</strong> Cooperados podem encontrar prestadores e publicar pedidos. Demandas institucionais reais exigirão critérios próprios de aprovação e seleção.</p></div>' +
       '<div class="filter-line"><div class="segmented">' +
       [["todos", "Todas as demandas"], ["cooperado", "De cooperados"], ["institucional", "Da Coopen"]].map(function (item) {
@@ -277,9 +299,9 @@
   }
   function renderMyProfile() {
     var p = state.myProfile;
-    return titleBlock("SEU ESPAÇO", "Apresente o que você faz.", "Teste como seria preencher e visualizar seu perfil profissional na Rede Coopen.") +
+    return titleBlock("MEU CARTÃO PROFISSIONAL", "Divulgue seu trabalho.", "Preencha seus dados para ver como outras pessoas encontrariam seu serviço.") +
       '<div class="info-banner">' + icon("info", 19) + '<p><strong>Somente demonstração.</strong> Os campos abaixo ficam guardados neste navegador. Não envie dados sensíveis; nenhum cadastro será enviado à Coopen.</p></div>' +
-      '<div class="profile-editor-layout"><form id="profile-form" class="form-panel"><div class="form-heading"><h2>Informações do perfil</h2><span>Prévia de cadastro</span></div>' +
+      '<div class="profile-editor-layout"><form id="profile-form" class="form-panel"><div class="form-heading"><h2>Meu cartão profissional</h2><span>Prévia de cadastro</span></div>' +
       '<div class="fields-grid"><label>Seu nome<input type="text" name="name" maxlength="70" required value="' + safe(p.name) + '" placeholder="Como você quer ser chamado"></label>' +
       '<label>Profissão ou atividade<input type="text" name="profession" maxlength="80" required value="' + safe(p.profession) + '" placeholder="Ex.: Desenvolvedor web"></label></div>' +
       '<label>Empresa ou nome comercial <small>(opcional)</small><input type="text" name="company" maxlength="90" value="' + safe(p.company) + '" placeholder="Ex.: Minha Empresa"></label>' +
@@ -391,6 +413,20 @@
     }
     return "";
   }
+
+  function mobileBottomNav() {
+    var tabs = [
+      ["inicio", "home", "Início"],
+      ["rede", "search", "Buscar"],
+      ["oportunidades", "briefcase", "Pedidos"],
+      ["meu-perfil", "user", "Meu perfil"]
+    ];
+    return '<nav class="mobile-bottom-nav" aria-label="Navegação rápida">' + tabs.map(function (tab) {
+      return '<button type="button" class="bottom-tab' + (state.page === tab[0] ? ' bottom-tab-active' : '') +
+        '" data-action="nav" data-page="' + tab[0] + '"' + (state.page === tab[0] ? ' aria-current="page"' : '') +
+        '>' + icon(tab[1], 23) + '<span>' + tab[2] + '</span></button>';
+    }).join("") + '</nav>';
+  }
   function footer() {
     return '<footer class="site-footer"><span><strong>rede coopen</strong> · Protótipo conceitual independente e não oficial</span><span>Dados fictícios · Sem backend · Feito para validar ideias</span></footer>';
   }
@@ -398,7 +434,7 @@
     document.getElementById("app").innerHTML =
       (state.menuOpen ? '<button class="sidebar-overlay" type="button" data-action="menu" aria-label="Fechar menu"></button>' : "") +
       sidebar() + '<div class="main-shell">' + topbar() + '<main id="page-content" class="main-content">' + renderPage() + '</main>' +
-      footer() + '</div>' + renderModal() + (state.toast ? '<div class="toast" role="status">' + icon("checkcircle", 20) + safe(state.toast) + '</div>' : "");
+      footer() + '</div>' + mobileBottomNav() + renderModal() + (state.toast ? '<div class="toast" role="status">' + icon("checkcircle", 20) + safe(state.toast) + '</div>' : "");
     document.body.classList.toggle("has-modal", !!state.modal);
   }
   var toastTimer;
